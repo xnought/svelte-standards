@@ -85,7 +85,7 @@ For example
 </script>
 ```
 
-## <a name="guidelines" href="#guidelines">#</a> <i>guidelines</i>
+# <a name="guidelines" href="#guidelines">#</a> <i>guidelines</i>
 
 TODO - add some guidelines for:
 
