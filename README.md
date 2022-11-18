@@ -94,7 +94,7 @@ In general, svelte projects get confusing when the functions start to take param
 
 If possible, try not to mutate global variables within function definitions.
 
-<p style="color: #CC4E46; font-weight: bold;">NO, <span style="font-weight:normal">try not to do this</span></p>
+> __Warning__ Try to avoid this below if you can
 
 ```html
 <script>
@@ -110,8 +110,7 @@ If possible, try not to mutate global variables within function definitions.
 </script>
 ```
 
-<p style="color: #5AA0CA; font-weight: bold;">YES, <span style="font-weight:normal">do this</span></p>
-
+> __Note__ Try this below instead
 ```html
 <script>
 	let age = 20;
