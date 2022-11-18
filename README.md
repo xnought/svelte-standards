@@ -111,6 +111,7 @@ If possible, try not to mutate global variables within function definitions.
 ```
 
 > __Note__ Try this below instead
+
 ```html
 <script>
 	let age = 20;
