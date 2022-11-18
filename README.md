@@ -71,7 +71,7 @@ For example
 
 	// 6. function calls
 	onMount(() => {
-		birthday();
+		age = birthday(age);
 		printPerson();
 	});
 
@@ -79,18 +79,65 @@ For example
 	function printPerson() {
 		console.log(name, age);
 	}
-	function birthday() {
-		age++;
+	function birthday(age) {
+		const newAge = age + 1;
+		return newAge;
 	}
 </script>
 ```
 
 # <a name="guidelines" href="#guidelines">#</a> <i>guidelines</i>
 
-TODO - add some guidelines for:
+## <a name="function-scope" href="#function-scope">#</a> <i>function scope</i>
+
+In general, svelte projects get confusing when the functions start to take parameters and mutate global variables.
+
+If possible, try not to mutate global variables within function definitions.
+
+<p style="color: #CC4E46; font-weight: bold;">NO, <span style="font-weight:normal">try not to do this</span></p>
+
+```html
+<script>
+	let age = 20;
+
+	// mutates global variable age
+	function birthday() {
+		age++;
+	}
+
+	// when birthday needs to be called (could be anywhere)
+	birthday();
+</script>
+```
+
+<p style="color: #5AA0CA; font-weight: bold;">YES, <span style="font-weight:normal">do this</span></p>
+
+```html
+<script>
+	let age = 20;
+
+	// takes in age as a parameter and returns the new age
+	// then, elsewhere redefine age as the new age
+	function birthday(age) {
+		const newAge = age + 1;
+		return newAge;
+	}
+
+	// when birthday needs to be called (could be anywhere)
+	const newAge = birthday(age);
+	age = newAge; // and then do reassignment to the global
+</script>
+```
+
+then you get the benefit of
+
+1. (organization) being able to put those functions in modules and import them
+2. (simplicity) Mutating outside variables and also taking in parameters, and also returning stuff is confusing
+
+### TODO GUIDELINES
 
 1. `$:` should not be anonymous
-2. decide if function definitions should reference global variables or not
+2. ~~decide if function definitions should reference global variables or not~~
 3. better guidelines for `createEventDispatcher` and `dispatch` (especially for ts)
 4. when to put function definitions in other files
 5. How to define types
