@@ -94,7 +94,7 @@ In general, svelte projects get confusing when the functions start to take param
 
 If possible, try not to mutate global variables within function definitions.
 
-> __Warning__ Try to avoid this below if you can
+> **Warning** Try to avoid this below if you can
 
 ```html
 <script>
@@ -110,7 +110,8 @@ If possible, try not to mutate global variables within function definitions.
 </script>
 ```
 
-> __Note__ Try this below instead
+> **Note** Try this below instead
+
 ```html
 <script>
 	let age = 20;
@@ -133,9 +134,92 @@ then you get the benefit of
 1. (organization) being able to put those functions in modules and import them
 2. (simplicity) Mutating outside variables and also taking in parameters, and also returning stuff is confusing
 
+## <a name="reactive-$" href="#reactive-$">#</a> <i>reactive $:{ }</i>
+
+In my experience, the `$: {}` parts always lead to the most confusion to what is actually happening.
+
+When using `$: {}` it can be hard to know
+
+1. what variable should it be reacting to
+2. what is the purpose of this reactive statement
+
+To clear this up, lets try to use the `$: ` statements only and do more complex operations within a function definition instead of a `$: {}` statement.
+
+For example,
+
+> **Warning** Try to avoid this below if you can
+
+```html
+<script>
+	let dogAge, chickenAge, cowAge;
+	$: {
+		cowAge = age * 3.64;
+		chickenAge = age * 5.33;
+		dogAge = age * 7;
+	}
+</script>
+```
+
+> **Note** Try this below instead
+
+```html
+<script>
+	$: dogAge = humanToDogYears(age);
+	$: chickenAge = humanToChickenYears(age);
+	$: cowAge = humanToCowYears(age);
+
+	function humanToDogYears(age) {
+		return age * 7;
+	}
+	function humanToChickenYears(age) {
+		return age * 5.33;
+	}
+	function humanToCowYears(age) {
+		return age * 3.64;
+	}
+</script>
+```
+
+The parameters of the function should always be why the `$: ` should react / be reran. Now it should be clear what the reactive statement is doing (from function name) and why its reacting (from function parameters).
+
+This also allows you to ignore variables that should not rerun the `$: `
+
+In the example below, I only redraw points when the points array changes or when canvasEl changes. I don't react to point `size` changes. If this were all done in a `$: {}` statement, then it would rerun every time `size` changes.
+
+```html
+<script>
+	export let points = [
+		{ x: 1, y: 2 },
+		{ x: 2, y: 3 },
+		{ x: 3, y: 4 },
+	];
+	export let size = 3;
+
+	let canvasEl: HTMLCanvasElement;
+
+	$: redrawPoints(canvasEl, points);
+
+	function redrawPoints(canvasEl, points) {
+		if (canvasEl) {
+			const ctx = canvasEl
+				.getContext("2d")
+				.clearRect(0, 0, canvasEl.width, canvasEl.height);
+
+			points.forEach((point) => {
+				ctx.fillRect(point.x, point.y, size, size);
+			});
+		}
+	}
+</script>
+
+<canvas width="{100}" height="{100}" bind:this="{canvasEl}"></canvas>
+```
+
+But now you see! You get control over reactive statements and readability by not using anonymous statements `$: {}` and instead using function definitions.
+
 ### TODO GUIDELINES
 
-1. `$:` should not be anonymous
+1. ~~`$:` should not be anonymous~~
 2. ~~decide if function definitions should reference global variables or not~~
 3. better guidelines for `createEventDispatcher` and `dispatch` (especially for ts)
 4. when to put function definitions in other files
