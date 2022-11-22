@@ -67,7 +67,7 @@ For example
 	let age = 20;
 
 	// 5. reactive statements
-	$: dogYears = age * 7;
+	$: dogYears = humanToDogYears(age);
 
 	// 6. function calls
 	onMount(() => {
@@ -82,6 +82,9 @@ For example
 	function birthday(age) {
 		const newAge = age + 1;
 		return newAge;
+	}
+	function humanToDogYears(age) {
+		return age * 7;
 	}
 </script>
 ```
@@ -143,7 +146,7 @@ When using `$: {}` it can be hard to know
 1. what variable should it be reacting to
 2. what is the purpose of this reactive statement
 
-To clear this up, lets try to use the `$: ` statements only and do more complex operations within a function definition instead of a `$: {}` statement.
+To clear this up, lets try to use the `$:` statements only and do more complex operations within a function definition instead of a `$: {}` statement.
 
 For example,
 
@@ -180,9 +183,9 @@ For example,
 </script>
 ```
 
-The parameters of the function should always be why the `$: ` should react / be reran. Now it should be clear what the reactive statement is doing (from function name) and why its reacting (from function parameters).
+The parameters of the function should always be why the `$:` should react / be reran. Now it should be clear what the reactive statement is doing (from function name) and why its reacting (from function parameters).
 
-This also allows you to ignore variables that should not rerun the `$: `
+This also allows you to ignore variables that should not rerun the `$:`
 
 In the example below, I only redraw points when the points array changes or when canvasEl changes. I don't react to point `size` changes. If this were all done in a `$: {}` statement, then it would rerun every time `size` changes.
 
@@ -195,7 +198,7 @@ In the example below, I only redraw points when the points array changes or when
 	];
 	export let size = 3;
 
-	let canvasEl: HTMLCanvasElement;
+	let canvasEl;
 
 	$: redrawPoints(canvasEl, points);
 
@@ -215,7 +218,7 @@ In the example below, I only redraw points when the points array changes or when
 <canvas width="{100}" height="{100}" bind:this="{canvasEl}"></canvas>
 ```
 
-But now you see! You get control over reactive statements and readability by not using anonymous statements `$: {}` and instead using function definitions.
+But now you see! You get control over reactive statements and readability by not using anonymous statements `$: {}` and instead using function definitions for english readability and control over what variables should trigger the function.
 
 ### TODO GUIDELINES
 
