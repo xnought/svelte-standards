@@ -204,9 +204,8 @@ In the example below, I only redraw points when the points array changes or when
 
 	function redrawPoints(canvasEl, points) {
 		if (canvasEl) {
-			const ctx = canvasEl
-				.getContext("2d")
-				.clearRect(0, 0, canvasEl.width, canvasEl.height);
+			const ctx = canvasEl.getContext("2d");
+			ctx.clearRect(0, 0, canvasEl.width, canvasEl.height);
 
 			points.forEach((point) => {
 				ctx.fillRect(point.x, point.y, size, size);
